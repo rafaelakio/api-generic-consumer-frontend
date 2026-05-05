@@ -1,0 +1,123 @@
+'use client';
+
+import { useMsal } from '@azure/msal-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { loginRequest } from '@/auth/msalConfig';
+import { adminLogin } from '@/auth/useAuth';
+import { useAuth } from '@/auth/useAuth';
+
+export default function LoginPage() {
+  const { instance } = useMsal();
+  const router = useRouter();
+  const { user } = useAuth();
+  const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
+  const [adminUsername, setAdminUsername] = useState('admin');
+  const [adminPassword, setAdminPassword] = useState('admin');
+  const [adminError, setAdminError] = useState('');
+
+  useEffect(() => {
+    if (user) router.replace('/dashboard/');
+  }, [user, router]);
+
+  async function handleAzureLogin() {
+    setLoadingProvider('azure');
+    try {
+      await instance.loginPopup(loginRequest);
+      router.replace('/dashboard/');
+    } catch {
+      // user dismissed popup
+    } finally {
+      setLoadingProvider(null);
+    }
+  }
+
+  async function handleAdminLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setAdminError('');
+    setLoadingProvider('admin');
+    try {
+      await adminLogin(adminUsername, adminPassword);
+      router.replace('/dashboard/');
+    } catch {
+      setAdminError('Usuário ou senha inválidos.');
+    } finally {
+      setLoadingProvider(null);
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-900 to-brand-600">
+      <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md flex flex-col items-center gap-6">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900">API Consumer</h1>
+          <p className="mt-2 text-gray-500">Escolha como deseja entrar</p>
+        </div>
+
+        <button
+          onClick={handleAzureLogin}
+          disabled={!!loadingProvider}
+          className="w-full flex items-center justify-center gap-3 px-6 py-3 rounded-lg bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors disabled:opacity-60"
+        >
+          {loadingProvider === 'azure' ? <Spinner /> : <MicrosoftIcon />}
+          Entrar com Azure AD
+        </button>
+
+        <div className="flex items-center gap-3 w-full">
+          <hr className="flex-1 border-gray-200" />
+          <span className="text-xs text-gray-400">ou</span>
+          <hr className="flex-1 border-gray-200" />
+        </div>
+
+        <form onSubmit={handleAdminLogin} className="w-full flex flex-col gap-3">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Acesso Admin</p>
+          <input
+            type="text"
+            placeholder="Usuário"
+            value={adminUsername}
+            onChange={(e) => setAdminUsername(e.target.value)}
+            disabled={!!loadingProvider}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 disabled:opacity-60"
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+            disabled={!!loadingProvider}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 disabled:opacity-60"
+          />
+          {adminError && <p className="text-sm text-red-600">{adminError}</p>}
+          <button
+            type="submit"
+            disabled={!!loadingProvider}
+            className="w-full flex items-center justify-center gap-3 px-6 py-3 rounded-lg bg-amber-500 text-white font-semibold hover:bg-amber-600 transition-colors disabled:opacity-60"
+          >
+            {loadingProvider === 'admin' && <Spinner />}
+            Entrar como Admin
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function MicrosoftIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+      <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+      <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+      <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+    </svg>
+  );
+}
+
+function Spinner() {
+  return (
+    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+    </svg>
+  );
+}
