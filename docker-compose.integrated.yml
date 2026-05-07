@@ -1,0 +1,58 @@
+services:
+  # LocalStack - Simulação de serviços AWS
+  localstack:
+    image: localstack/localstack:3
+    container_name: api-consumer-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=dynamodb,secretsmanager
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    volumes:
+      - "../api-generic-consumer-backend/localstack-init:/docker-entrypoint-initaws.d"
+    networks:
+      - api-consumer-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # Backend - Spring Boot API
+  backend:
+    build:
+      context: ../api-generic-consumer-backend
+      dockerfile: Dockerfile
+    container_name: api-consumer-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DYNAMODB_ENDPOINT=http://localstack:4566
+      - AWS_DYNAMODB_TABLE_NAME=audit-logs
+      - SPRING_PROFILES_ACTIVE=test
+      - SERVICENOW_ENABLED=false
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - ADMIN_JWT_SECRET=test-secret-key-for-integration-testing-only
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+    depends_on:
+      - localstack
+    networks:
+      - api-consumer-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+networks:
+  api-consumer-network:
+    driver: bridge
+
+# Made with Bob

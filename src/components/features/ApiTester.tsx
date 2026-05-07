@@ -32,7 +32,7 @@ export default function ApiTester() {
         return;
       }
 
-      const res = await proxyRequest({ request: req }, token);
+      const res = await proxyRequest(req, token);
       const json = await res.json();
 
       if (!res.ok) {
