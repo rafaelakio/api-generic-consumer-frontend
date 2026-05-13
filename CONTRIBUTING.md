@@ -1,53 +1,329 @@
-# Guia de Contribuição
+# Contributing to API Generic Consumer Frontend
 
-Obrigado por considerar contribuir com o API Generic Consumer Frontend! 🎉
+Thank you for your interest in contributing to the API Generic Consumer Frontend! This document provides comprehensive guidelines to help you contribute effectively in our open source project.
 
-## 📋 Índice
+## Table of Contents
 
-- [Código de Conduta](#código-de-conduta)
-- [Como Posso Contribuir?](#como-posso-contribuir)
-- [Processo de Desenvolvimento](#processo-de-desenvolvimento)
-- [Padrões de Código](#padrões-de-código)
-- [Padrões de Commit](#padrões-de-commit)
-- [Pull Requests](#pull-requests)
-- [Testes](#testes)
+- [Code of Conduct](#code-of-conduct)
+- [Getting Started](#getting-started)
+- [Development Workflow](#development-workflow)
+- [Coding Standards](#coding-standards)
+- [Testing Guidelines](#testing-guidelines)
+- [Documentation](#documentation)
+- [Pull Request Process](#pull-request-process)
+- [Issue Reporting](#issue-reporting)
+- [Security](#security)
 
-## 📜 Código de Conduta
+## Code of Conduct
 
-Este projeto adere ao [Código de Conduta](CODE_OF_CONDUCT.md). Ao participar, você concorda em manter este código.
+This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). Please read and follow it in all your interactions with the project.
 
-## 🤝 Como Posso Contribuir?
+## Getting Started
 
-### Reportando Bugs
+### Prerequisites
 
-Antes de criar um bug report, verifique se o problema já não foi reportado. Se você encontrar um bug:
+- Node.js 20 or higher
+- npm or yarn
+- Git
+- Modern web browser
+- IDE (VS Code recommended)
 
-1. Use o template de issue para bugs
-2. Inclua título claro e descritivo
-3. Descreva os passos para reproduzir
-4. Forneça exemplos específicos
-5. Descreva o comportamento esperado vs atual
-6. Inclua screenshots se aplicável
-7. Adicione informações do ambiente (Browser, OS, Node version)
+### Setup
 
-### Sugerindo Melhorias
+1. Fork the repository
+2. Clone your fork:
+   ```bash
+   git clone https://github.com/your-username/api-generic-consumer-frontend.git
+   cd api-generic-consumer-frontend
+   ```
+3. Add the original repository as upstream:
+   ```bash
+   git remote add upstream https://github.com/original-owner/api-generic-consumer-frontend.git
+   ```
+4. Create a feature branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
 
-Para sugerir melhorias:
+## Development Workflow
 
-1. Use o template de issue para features
-2. Explique claramente o problema que a feature resolve
-3. Descreva a solução proposta
-4. Liste alternativas consideradas
-5. Adicione mockups se aplicável
+We follow the GitFlow branching model:
 
-### Contribuindo com Código
+### Branch Structure
 
-1. Fork o repositório
-2. Crie uma branch para sua feature
-3. Faça suas alterações
-4. Adicione testes
-5. Garanta que todos os testes passam
-6. Faça commit das suas mudanças
+- `main`: Production-ready code
+- `develop`: Integration branch for features
+- `feature/*`: New features
+- `release/*`: Release preparation
+- `hotfix/*`: Critical fixes
+
+### Workflow
+
+1. **Create Feature Branch**
+   ```bash
+   git checkout develop
+   git pull upstream develop
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Develop and Test**
+   - Write code following our coding standards
+   - Add comprehensive tests
+   - Ensure all tests pass
+
+3. **Commit Changes**
+   ```bash
+   git add .
+   git commit -m "feat: add your feature description"
+   ```
+
+4. **Push and Create PR**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+## Coding Standards
+
+### TypeScript/JavaScript Guidelines
+
+- Follow [TypeScript style guide](https://typescript-eslint.io/)
+- Use meaningful variable and function names
+- Keep functions small and focused
+- Add JSDoc comments for public APIs
+- Use modern ES6+ features
+
+### Code Style
+
+```typescript
+// Good
+const getUserById = async (id: string): Promise<User> => {
+  const user = await userRepository.findById(id);
+  if (!user) {
+    throw new Error(`User with id ${id} not found`);
+  }
+  return user;
+};
+
+// Bad
+const getUser = async (id) => {
+  const u = await userRepository.findById(id);
+  return u;
+};
+```
+
+### React Guidelines
+
+- Use functional components with hooks
+- Follow React best practices
+- Implement proper error boundaries
+- Use TypeScript for type safety
+- Follow accessibility guidelines
+
+### Architecture Guidelines
+
+- Follow clean architecture principles
+- Use proper state management
+- Implement proper error handling
+- Separate concerns properly
+
+## Testing Guidelines
+
+### Test Structure
+
+```
+src/
+├── __tests__/
+│   ├── unit/           # Unit tests
+│   ├── integration/    # Integration tests
+│   └── e2e/           # End-to-end tests
+└── components/
+    └── __tests__/       # Component tests
+```
+
+### Writing Tests
+
+```typescript
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { UserCard } from './UserCard';
+
+describe('UserCard', () => {
+  const mockUser = {
+    id: '1',
+    name: 'John Doe',
+    email: 'john@example.com'
+  };
+
+  it('should render user information correctly', () => {
+    render(<UserCard user={mockUser} />);
+    
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('john@example.com')).toBeInTheDocument();
+  });
+
+  it('should handle click events', async () => {
+    const onEdit = jest.fn();
+    render(<UserCard user={mockUser} onEdit={onEdit} />);
+    
+    const editButton = screen.getByRole('button', { name: /edit/i });
+    await userEvent.click(editButton);
+    
+    expect(onEdit).toHaveBeenCalledWith(mockUser);
+  });
+});
+```
+
+### Test Coverage
+
+- Maintain minimum 80% code coverage
+- Write tests for critical user flows
+- Test edge cases and error scenarios
+- Use meaningful test names
+
+## Documentation
+
+### Code Documentation
+
+- Add JSDoc for all public functions
+- Document complex business logic
+- Include examples in documentation
+
+### README Updates
+
+Update README.md for:
+- New features
+- Configuration changes
+- API modifications
+- Setup instructions
+
+## Pull Request Process
+
+### Before Submitting
+
+1. **Code Quality**
+   - [ ] Code follows style guidelines
+   - [ ] Tests pass locally
+   - [ ] Documentation is updated
+   - [ ] No sensitive data in code
+
+2. **Testing**
+   - [ ] Unit tests written
+   - [ ] Integration tests pass
+   - [ ] Manual testing completed
+   - [ ] Accessibility checks passed
+
+3. **Security**
+   - [ ] No hardcoded secrets
+   - [ ] Input validation implemented
+   - [ ] XSS prevention considered
+   - [ ] Authentication/authorization considered
+
+### PR Template
+
+```markdown
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+
+## Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] E2E tests pass
+- [ ] Manual testing completed
+
+## Accessibility
+- [ ] Screen reader compatible
+- [ ] Keyboard navigation works
+- [ ] Color contrast compliant
+
+## Checklist
+- [ ] Code follows style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated
+- [ ] No breaking changes (or documented)
+```
+
+### Review Process
+
+1. Automated checks must pass
+2. At least one maintainer approval required
+3. Address all review comments
+4. Maintain clean commit history
+
+## Issue Reporting
+
+### Bug Reports
+
+Use the following template for bug reports:
+
+```markdown
+**Bug Description**
+Clear description of the bug
+
+**Steps to Reproduce**
+1. Step 1
+2. Step 2
+3. Step 3
+
+**Expected Behavior**
+What should happen
+
+**Actual Behavior**
+What actually happens
+
+**Environment**
+- OS: [e.g., Windows 10, macOS 12.0]
+- Browser: [e.g., Chrome 120, Firefox 121]
+- Node Version: [e.g., 20.10.0]
+
+**Additional Context**
+Any other relevant information
+- Screenshots if applicable
+```
+
+### Feature Requests
+
+```markdown
+**Feature Description**
+Clear description of the feature
+
+**Problem Statement**
+What problem does this solve?
+
+**Proposed Solution**
+How should this be implemented?
+
+**Alternatives Considered**
+Other approaches you thought about
+
+**Additional Context**
+Any other relevant information
+- Mockups if applicable
+```
+
+## Security
+
+If you discover a security vulnerability, please report it privately to:
+
+- Email: security@example.com
+- Do not open a public issue
+
+See our [Security Policy](SECURITY.md) for more details.
+
+## Getting Help
+
+- Check existing issues and documentation
+- Join our [Discord community](https://discord.gg/example)
+- Create an issue for questions
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the [MIT License](LICENSE).
 7. Push para sua branch
 8. Abra um Pull Request
 

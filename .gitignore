@@ -1,8 +1,136 @@
+# ==================== NODE.JS / TYPESCRIPT ====================
 node_modules/
+.npm/
+.yarn/
+.pnpm-store/
+.pnp*
+
+# ==================== BUILD OUTPUT ====================
 .next/
 out/
+build/
+dist/
+.turbo/
+.cache/
+
+# ==================== ENVIRONMENT & CREDENTIALS ====================
 .env
 .env.local
+.env.development
+.env.test
 .env.production
+.env.*.local
+.env.*.private
+.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cert
+credentials.json
+secrets.json
+config/secrets/
+.aws/
+.aws-credentials
+
+# ==================== LOGS ====================
 *.log
+*.log.*
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ==================== TESTING ====================
+coverage/
+.nyc_output/
+*.lcov
+test-results/
+.vitest/
+playwright-report/
+test-results/
+
+# ==================== IDE ====================
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.code-workspace
 .DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ==================== BUILD ARTIFACTS ====================
+*.tsbuildinfo
+*.d.ts
+next-env.d.ts
+
+# ==================== SECURITY ====================
+*.jks
+*.keystore
+*.hprof
+*.p12
+*.pem
+*.crt
+*.key
+*.pk8
+
+# ==================== DOCKER ====================
+.dockerignore
+docker-compose.override.yml
+docker-volumes/
+
+# ==================== TEMPORARY FILES ====================
+tmp/
+temp/
+.tmp/
+*.tmp
+*.temp
+.cache/
+
+# ==================== OS ====================
+.DS_Store
+Thumbs.db
+*.pid
+*.seed
+*.pid.lock
+
+# ==================== DEPENDENCY LOCKS ====================
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ==================== RUNTIME ====================
+.vercel
+.netlify
+
+# ==================== ANALYTICS & TELEMETRY ====================
+.next/telemetry
+.next/cache
+
+# ==================== STORYBOOK ====================
+storybook-static/
+
+# ==================== ESLINT ====================
+.eslintcache
+
+# ==================== PRETTIER ====================
+.prettierignore
+
+# ==================== TYPESCRIPT ====================
+*.tsbuildinfo
+
+# ==================== CI/CD ====================
+.github/workflows/*.local
+.gitlab-ci.local
+azure-pipelines.local
+
+# ==================== LOCAL CONFIGURATION ====================
+.local
+.vscode/settings.json
+.idea/workspace.xml

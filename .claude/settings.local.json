@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/dev/**)",
+      "PowerShell(docker info *)",
+      "Bash(docker info *)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(cmd.exe *)",
+      "PowerShell($proc = Start-Process -FilePath \"cmd.exe\" -ArgumentList \"/c docker info >nul 2>&1 & echo ERRORLEVEL=%ERRORLEVEL%\" -Wait -PassThru -NoNewWindow -RedirectStandardOutput \"C:\\\\temp\\\\docker_check.txt\" 2>$null; if \\(Test-Path \"C:\\\\temp\\\\docker_check.txt\"\\) { Get-Content \"C:\\\\temp\\\\docker_check.txt\" } else { \"temp file not found\" }; Write-Host \"Process exit: $\\($proc.ExitCode\\)\")",
+      "Bash(mkdir -p /tmp)",
+      "Bash(cmd.exe /c \"docker info >nul 2>&1 & echo ERRORLEVEL=%ERRORLEVEL%\")",
+      "Read(//tmp/**)",
+      "PowerShell($result = cmd /c \"docker info 2>&1 | findstr /c:\\\\\"ERROR\\\\\" /c:\\\\\"error\\\\\"\"; Write-Host \"Output: $result\"; $ec = $LASTEXITCODE; Write-Host \"FindStr exit code: $ec\")",
+      "PowerShell($proc = New-Object System.Diagnostics.ProcessStartInfo; $proc.FileName = \"cmd.exe\"; $proc.Arguments = '/c \"docker info >nul 2>&1\"'; $proc.UseShellExecute = $false; $p = [System.Diagnostics.Process]::Start\\($proc\\); $p.WaitForExit\\(\\); Write-Host \"docker info exit code: $\\($p.ExitCode\\)\")",
+      "PowerShell($p1 = New-Object System.Diagnostics.ProcessStartInfo; $p1.FileName = \"cmd.exe\"; $p1.Arguments = '/c \"docker-compose --version\"'; $p1.UseShellExecute = $false; $p1.RedirectStandardOutput = $true; $p1.RedirectStandardError = $true; $proc1 = [System.Diagnostics.Process]::Start\\($p1\\); $stdout1 = $proc1.StandardOutput.ReadToEnd\\(\\); $proc1.WaitForExit\\(\\); Write-Host \"docker-compose exit code: $\\($proc1.ExitCode\\)\"; Write-Host \"Output: $stdout1\")",
+      "PowerShell($p = New-Object System.Diagnostics.ProcessStartInfo; $p.FileName = \"cmd.exe\"; $p.Arguments = '/c \"docker info\"'; $p.UseShellExecute = $false; $p.RedirectStandardOutput = $true; $p.RedirectStandardError = $true; $proc = [System.Diagnostics.Process]::Start\\($p\\); $out = $proc.StandardOutput.ReadToEnd\\(\\); $err = $proc.StandardError.ReadToEnd\\(\\); $proc.WaitForExit\\(\\); Write-Host \"Exit: $\\($proc.ExitCode\\)\"; Write-Host \"STDOUT:\"; Write-Host $out; if \\($err\\) { Write-Host \"STDERR:\"; Write-Host $err })",
+      "Bash(xxd \"C:/dev/api-generic-consumer-frontend/start-integrated-test.bat\")",
+      "Bash(sed -i 's/\\\\r//' \"C:/dev/api-generic-consumer-frontend/start-integrated-test.bat\")",
+      "Bash(unix2dos \"C:/dev/api-generic-consumer-frontend/start-integrated-test.bat\")",
+      "Bash(python3 -c ' *)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri 'http://localhost:4566/_localstack/health' -UseBasicParsing -TimeoutSec 10; Write-Host \"Status: $\\($r.StatusCode\\)\"; Write-Host $r.Content } catch { Write-Host \"Erro: $_\" })",
+      "Bash(unix2dos \"C:/dev/api-generic-consumer-frontend/docker-compose.integrated.yml\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(gh pr create --title 'feat: add integrated test environment and fix proxy request payload' --body ' *)",
+      "PowerShell(winget install *)",
+      "PowerShell(Test-Path *)",
+      "PowerShell($gh = \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\"; cd \"C:/dev/api-generic-consumer-frontend\"; & $gh pr list --repo rafaelakio/api-generic-consumer-frontend)"
+    ]
+  }
+}
